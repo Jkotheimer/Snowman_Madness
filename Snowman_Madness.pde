@@ -11,9 +11,10 @@ void setup() {
 void draw() {
   background(100, 190, 255);
   shape(p1.getCharacter());
+  p1.fall();
   for(Surface s : surfaces) {
     shape(s.getShape());
-    p1.fall();
+    p1.checkCollision(s.getX(), s.getY());
   }
 }
 

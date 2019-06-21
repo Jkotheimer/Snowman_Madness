@@ -38,8 +38,11 @@ class Player {
 
   public void fall() {
   }
+  public void checkCollision(float x, float Y) {
+    
+  }
 
-   public void runLeft() {
+  public void runLeft() {
   }
   public void runRight() {
   }
