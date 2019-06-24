@@ -42,19 +42,21 @@ class Player {
     float bottomSide = posY + B.getLowPoint();
     velY += accY;
 
-    // First, we want to check for running into the edge of the screen
+    // First, we want to check for running into the edge of the object
     if (leftSide <= 0 && velX < 0) {
       character.translate(0 - leftSide, 0);
       posX -= leftSide;
       velX = abs(velX);
-    } else if (rightSide >= width && velX > 0) {
-      character.translate(width - rightSide, 0);
-      posX += width - rightSide;
+    } else if (rightSide >= x && velX > 0) {
+      character.translate(x - rightSide, 0);
+      posX += x - rightSide;
       velX = abs(velX) * -1;
     } else {
       character.translate(velX, 0);
       posX += velX;
     }
+    
+    // Next, we wanna check for landing on an object
     if (posY <= 0 && velY < 0) {
       character.translate(0, 0 - posY);
       posY -= leftSide;
@@ -74,23 +76,19 @@ class Player {
     }
   }
 
-  public void runLeft() { 
-    if (abs(velX) < maxVelX || velX > 0) velX -= accX;
-  }
-  public void runRight() { 
-    if (abs(velX) < maxVelX || velX < 0) velX += accX;
-  }
+  public void runLeft() { if(abs(velX) < maxVelX || velX > 0) velX -= accX; }
+  public void runRight(){ if(abs(velX) < maxVelX || velX < 0) velX += accX; }
   public void jump() { 
-    if (!inAir) velY = 30;   
+    if (!inAir) velY = 70;   
     inAir = true;
   }
 
   public void stopRunning() { 
     if (velX > 0) {
-      velX -= accX;
+      velX -= accX * 2;
       if (velX < 0) velX = 0;
     } else if (velX < 0) {
-      velX += accX;
+      velX += accX * 2;
       if (velX > 0) velX = 0;
     }
   }
