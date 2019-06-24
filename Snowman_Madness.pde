@@ -34,7 +34,3 @@ void checkKeys() {
     }
   } else p1.stopRunning();
 }
-
-void keyReleased() {
-  
-}

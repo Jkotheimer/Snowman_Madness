@@ -4,9 +4,9 @@ class Player {
   private Head h = new Head();
   private Body b = new Body();
   private Bottom B = new Bottom();
-  
+
   private final float accX = .5;
-  private final float accY = 9.8;
+  private final float accY = 0.98;
   private boolean inAir = true;
 
   private float velX = 0;
@@ -25,39 +25,73 @@ class Player {
     posX = initX + B.getRadius();
   }
 
-  public PShape getCharacter() { return character; }
+  public PShape getCharacter() { 
+    return character;
+  }
 
-  public float getX() { return posX; }
-  public float getY() { return posY; }
-  
+  public float getX() { 
+    return posX;
+  }
+  public float getY() { 
+    return posY;
+  }
+
   public void move(float x, float y) {
     float leftSide = posX - B.getRadius();
     float rightSide = posX + B.getRadius();
-    if(leftSide <= 0 && velX < 0) {
+    float bottomSide = posY + B.getLowPoint();
+    velY += accY;
+
+    // First, we want to check for running into the edge of the screen
+    if (leftSide <= 0 && velX < 0) {
       character.translate(0 - leftSide, 0);
       posX -= leftSide;
-    } else if(rightSide >= width && velX > 0) {
+      velX = abs(velX);
+    } else if (rightSide >= width && velX > 0) {
       character.translate(width - rightSide, 0);
       posX += width - rightSide;
-    }
-    else {
+      velX = abs(velX) * -1;
+    } else {
       character.translate(velX, 0);
       posX += velX;
     }
+    if (posY <= 0 && velY < 0) {
+      character.translate(0, 0 - posY);
+      posY -= leftSide;
+      //velY = abs(velY);
+    } else if (bottomSide >= y && velY > 0) {
+      character.translate(0, y - bottomSide);
+      posY += y - bottomSide;
+      if(velY < .785) {
+        velY = 0;
+        inAir = false;
+      } 
+      println(velY);
+      velY = abs(velY) * -.25;
+    } else {
+      character.translate(0, velY);
+      posY += velY;
+    }
   }
 
-  public void runLeft()  { if(abs(velX) < maxVelX) velX -= accX; }
-  public void runRight() { if(abs(velX) < maxVelX) velX += accX; }
-  public void jump()     { if(!inAir) velY = 20;   inAir = true; }
+  public void runLeft() { 
+    if (abs(velX) < maxVelX || velX > 0) velX -= accX;
+  }
+  public void runRight() { 
+    if (abs(velX) < maxVelX || velX < 0) velX += accX;
+  }
+  public void jump() { 
+    if (!inAir) velY = 30;   
+    inAir = true;
+  }
 
   public void stopRunning() { 
-    if(velX > 0) {
+    if (velX > 0) {
       velX -= accX;
-      if(velX < 0) velX = 0;
-    }
-    else if(velX < 0) {
+      if (velX < 0) velX = 0;
+    } else if (velX < 0) {
       velX += accX;
-      if(velX > 0) velX = 0;
+      if (velX > 0) velX = 0;
     }
   }
 }
