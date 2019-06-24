@@ -8,7 +8,7 @@ class Head {
     hat = createShape(GROUP);
     PShape top, brim, nose, eye, face;
     
-    face = createShape(ELLIPSE, 20, 45, 30, 30);
+    face = createShape(ELLIPSE, 35, 60, 30, 30);
     face.setFill(color(255));
     
     eye = createShape(RECT, 37, 55, 5, 5);

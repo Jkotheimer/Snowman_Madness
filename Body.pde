@@ -3,7 +3,7 @@ class Body {
   private PShape body;
   
   public Body() {
-    body = createShape(ELLIPSE, 10, 75, 50, 50);
+    body = createShape(ELLIPSE, 35, 98, 50, 50);
     body.setFill(color(255));
   }
   
