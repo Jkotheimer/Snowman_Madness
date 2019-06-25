@@ -43,13 +43,13 @@ class Player {
     velY += accY;
 
     // First, we want to check for running into the edge of the object
-    if (leftSide <= 0 && velX < 0) {
+    if (leftSide < 0 && velX < 0) {
       character.translate(0 - leftSide, 0);
       posX -= leftSide;
       velX = abs(velX);
-    } else if (rightSide >= x && velX > 0) {
-      character.translate(x - rightSide, 0);
-      posX += x - rightSide;
+    } else if (rightSide >= width && velX > 0) {
+      character.translate(width - rightSide, 0);
+      posX += width - rightSide;
       velX = abs(velX) * -1;
     } else {
       character.translate(velX, 0);
@@ -68,7 +68,6 @@ class Player {
         velY = 0;
         inAir = false;
       } 
-      println(velY);
       velY = abs(velY) * -.25;
     } else {
       character.translate(0, velY);

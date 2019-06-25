@@ -31,7 +31,7 @@ void checkKeys() {
       case 37: p1.runLeft(); break;
       case 38: p1.jump(); break;
       case 39: p1.runRight(); break;
-      default: break;
     }
+    println(keyCode);
   } else p1.stopRunning();
 }
