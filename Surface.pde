@@ -14,4 +14,6 @@ class Surface {
   public PShape getShape() { return shape; }
   public float getX() { return posX; }
   public float getY() { return posY; } //<>//
+  public float getWidth() { return shape.width; }
+  public float getHeight() { return shape.height; }
 }

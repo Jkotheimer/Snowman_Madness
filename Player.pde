@@ -15,6 +15,11 @@ class Player {
 
   private float posX = 0;
   private float posY = 0;
+  
+  private boolean movingLeft = false;
+  private boolean deccelLeft = false;
+  private boolean movingRight = false;
+  private boolean deccelRight = false;
 
   public Player(float initX) {
     character.addChild(h.getHead());
@@ -25,43 +30,56 @@ class Player {
     posX = initX + B.getRadius();
   }
 
-  public PShape getCharacter() { 
-    return character;
-  }
+  public PShape getCharacter() { return character; }
 
-  public float getX() { 
-    return posX;
-  }
-  public float getY() { 
-    return posY;
-  }
+  public float getX() { return posX; }
+  public float getY() { return posY; }
 
-  public void move(float x, float y) {
+  public void move(float x, float y, float w, float h) {
     float leftSide = posX - B.getRadius();
     float rightSide = posX + B.getRadius();
     float bottomSide = posY + B.getLowPoint();
     velY += accY;
-
-    // First, we want to check for running into the edge of the object
+    
+    if(movingLeft && abs(velX) < maxVelX || deccelRight && velX > 0) { 
+      velX -= accX;
+      if(deccelRight && velX < 0) {
+        deccelRight = false;
+        velX = 0;
+      }
+    }
+    if(movingRight && abs(velX) < maxVelX || deccelLeft && velX < 0) {
+      velX += accX;
+      if(deccelLeft && velX > 0) { 
+        deccelLeft = false;
+        velX = 0;
+      }
+    }
+    checkCollision(leftSide, rightSide, x, w);
+    checkLanding(bottomSide, y, h);
+  }
+  
+  private void checkCollision(float leftSide, float rightSide, float x, float w) {
     if (leftSide < 0 && velX < 0) {
       character.translate(0 - leftSide, 0);
-      posX -= leftSide;
-      velX = abs(velX);
-    } else if (rightSide >= width && velX > 0) {
-      character.translate(width - rightSide, 0);
-      posX += width - rightSide;
-      velX = abs(velX) * -1;
+      posX = 0 + B.getRadius();
+      velX = 0;
+      stop();
+    } else if (rightSide >= (width * .66) && velX > 0) {
+      character.translate((width * .66) - rightSide, 0);
+      posX = (width * .66) - B.getRadius();
+      velX = 0;
+      stop();
     } else {
       character.translate(velX, 0);
       posX += velX;
     }
-    
-    // Next, we wanna check for landing on an object
-    if (posY <= 0 && velY < 0) {
-      character.translate(0, 0 - posY);
-      posY -= leftSide;
-      //velY = abs(velY);
-    } else if (bottomSide >= y && velY > 0) {
+  }
+  
+  private void checkLanding(float bottomSide, float y, float h) {
+    /* We wanna check for landing on an object
+        If the bottom of the player hits the current surface and the player is falling, give a lil bounce*/
+    if (bottomSide >= y && velY > 0) {
       character.translate(0, y - bottomSide);
       posY += y - bottomSide;
       if(velY < .785) {
@@ -75,20 +93,14 @@ class Player {
     }
   }
 
-  public void runLeft() { if(abs(velX) < maxVelX || velX > 0) velX -= accX; }
-  public void runRight(){ if(abs(velX) < maxVelX || velX < 0) velX += accX; }
+  public void stop() { movingLeft = false; movingRight = false; deccelLeft = false; deccelRight = false; }
+  public void runLeft() { movingLeft = true; movingRight = false; deccelLeft = false; deccelRight = false; }
+  public void stopLeft() { movingLeft = false; movingRight = false; deccelLeft = true; deccelRight = false; }
+  public void runRight() { movingRight = true; movingLeft = false; deccelLeft = false; deccelRight = false; }
+  public void stopRight() { movingRight = false; movingLeft = false; deccelLeft = false; deccelRight = true; }
+  
   public void jump() { 
     if (!inAir) velY = 70;   
     inAir = true;
-  }
-
-  public void stopRunning() { 
-    if (velX > 0) {
-      velX -= accX * 2;
-      if (velX < 0) velX = 0;
-    } else if (velX < 0) {
-      velX += accX * 2;
-      if (velX > 0) velX = 0;
-    }
   }
 }
